@@ -1,0 +1,36 @@
+name: test
+
+on:
+  push:
+
+jobs:
+ 
+  platforms-serverless:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - serverless-lambda
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: use node 12
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12
+
+      - run: yarn
+      - run: yarn prisma generate
+      - run: yarn sls package
+      - run: ls -l .serverless
+      
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dot-serverless-${{ matrix.os }}
+          path: .serverless/
+
