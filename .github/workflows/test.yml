@@ -26,6 +26,7 @@ jobs:
 
       - run: yarn
       - run: yarn prisma generate
+      - run: yarn sls version
       - run: yarn sls package
       - run: ls -l .serverless
       
